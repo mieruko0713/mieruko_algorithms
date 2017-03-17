@@ -31,12 +31,20 @@ int main() {
         scanf("%lf",&cakes[i].price);
     }
     sort(cakes,cakes+n,cmp);
+//    for(i=0;i<n;i++) {
+//        printf("%lf",cakes[i].price);
+//    }
     for(i=0;i<n;i++) {
         if(sum >=  cakes[i].ton) {
+//            printf("sum: %d\n",sum);
             sum = sum-cakes[i].ton;
+//            printf("ton: %d\n",cakes[i].ton);
+//            printf("sum: %d\n",sum);
             profit += cakes[i].price;
+//            printf("price: %lf\n",profit);
         } else if(sum < cakes[i].ton ) {
             profit += cakes[i].price * (sum*1.0/cakes[i].ton);
+//            printf("price: %lf\n",profit);
             break;
         }
     }
