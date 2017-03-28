@@ -2,7 +2,7 @@
 //  1058.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/3/3.
+//  Created by 王怡凡 on 2017/3/27.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
@@ -10,20 +10,20 @@
 using namespace std;
 
 int main() {
-    int i,a[3],b[3],ans[3];
-    scanf("%d.%d.%d",&a[0],&a[1],&a[2]);
-    scanf("%d.%d.%d",&b[0],&b[1],&b[2]);
-    for(i=0;i<3;i++) {
-        ans[i] = a[i] + b[i];
+    int a1,a2,a3,b1,b2,b3,ans1,ans2,ans3;
+    scanf("%d.%d.%d",&a1,&a2,&a3);
+    scanf("%d.%d.%d",&b1,&b2,&b3);
+    ans1 = a1+b1;
+    ans2 = a2+b2;
+    ans3 = a3+b3;
+    if(ans3>=29) {
+        ans2 = ans2 + ans3/29;
     }
-    if(ans[2]/29>0) {
-        ans[1]+= ans[2]/29;
-        ans[2]= ans[2]%29;
+    ans3 = ans3 % 29;
+    if(ans2>=17) {
+        ans1 = ans2/17+ans1;
     }
-    if(ans[1]/17>0) {
-        ans[0] += ans[1]/17;
-        ans[1] = ans[1]%17;
-    }
-    printf("%d.%d.%d",ans[0],ans[1],ans[2]);
+    ans2 %= 17;
+    printf("%d.%d.%d",ans1,ans2,ans3);
     return 0;
 }

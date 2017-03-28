@@ -2,77 +2,80 @@
 //  1057.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/3/3.
+//  Created by 王怡凡 on 2017/3/27.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
 #include<cstdio>
-#include<cmath>
-#include<stack>
 #include<cstring>
+#include<stack>
+#include<algorithm>
 using namespace std;
 const int maxn = 100010;
-const int sqr = 317;
-int block[sqr];
+const int sqrN = 317;
+
+stack<int> st;
+int block[sqrN];
 int table[maxn];
-stack<int> s;
 
-void push(int x) {
-    s.push(x);
+void peekMedian(int k) {
+//    printf("p\n");
+    int sum = 0;
+    int idx = 0;
+    while(sum+block[idx]<k) {
+        sum+=block[idx++];
+    }
+    int num = idx*sqrN;
+    while(sum+table[num]<k) {
+        sum += table[num++];
+    }
+    printf("%d\n",num);
+}
+
+void Push(int x) {
+    st.push(x);
+    block[x/sqrN]++;
     table[x]++;
-    block[x/sqr]++;
 }
 
-void pop() {
-    int x = s.top();
-    printf("%d\n",x);
-    s.pop();
+void Pop() {
+    int x = st.top();
+    st.pop();
+    block[x/sqrN]--;
     table[x]--;
-    block[x/sqr]--;
-}
-
-void find_median(int k) {
-    int sum=0,num=0,index;
-    while(sum+block[num]< k) {
-        sum += block[num];
-        num++;
-    }
-    index = num*sqr;
-    while(sum+table[index]<k) {
-        sum += table[index];
-        index++;
-    }
-    printf("%d\n",index);
+    printf("%d\n",x);
 }
 
 int main() {
-    int i,n,x,k,size;
+    int x,i,query;
     memset(block,0,sizeof(block));
     memset(table,0,sizeof(table));
     char cmd[20];
-    scanf("%d",&n);
-    for(i=0;i<n;i++) {
+    scanf("%d",&query);
+    for(i=0;i<query;i++) {
         scanf("%s",cmd);
-        if(!strcmp(cmd,"Push")) {
+        if(strcmp(cmd,"Push")==0) {
             scanf("%d",&x);
-            push(x);
-        } else if(!strcmp(cmd,"Pop")) {
-            if(s.empty()) {
-                printf("Invalid\n");
-                continue;
-            }
-            pop();
-        } else if(!strcmp(cmd,"PeekMedian")) {
-            if(s.empty()) {
+            Push(x);
+        } else if(strcmp(cmd,"Pop")==0) {
+            if(st.empty()==true) {
                 printf("Invalid\n");
             } else {
-                size = s.size();
-                if(size%2==1)
-                k = (size + 1)/2;
-                else k = size/2;
-                find_median(k);
+                Pop();
             }
-            
+        } else {
+            if(st.empty()==true) {
+                printf("Invalid\n");
+            } else {
+                int k = st.size();
+//                printf("%d:k",k);
+                if(k%2==1) {
+                    k = (k+1)/2;
+                } else {
+                    k = k/2;
+                }
+                peekMedian(k);
+            }
         }
     }
     return 0;
