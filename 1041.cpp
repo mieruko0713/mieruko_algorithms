@@ -2,32 +2,32 @@
 //  1041.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/28.
+//  Created by 王怡凡 on 2017/4/2.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
 #include<cstdio>
 using namespace std;
-const int maxn1 = 10010;
-const int maxn2 = 100010;
-int Hash[maxn1] = {0};
+const int maxn = 100010;
+int hash[maxn],num[maxn];
+int n;
 
-int main(){
-    int i,n,a[maxn2];
+int main() {
     scanf("%d",&n);
+    int i;
     for(i=0;i<n;i++) {
-        scanf("%d",&a[i]);
-        Hash[a[i]]++;
+        scanf("%d",&num[i]);
+        hash[num[i]]++;
     }
     for(i=0;i<n;i++) {
-        if(Hash[a[i]]==1) {
-            printf("%d",a[i]);
+//        printf("num:%d hash:%d\n",num[i],hash[num[i]]);
+        if(hash[num[i]]==1) {
+            printf("%d\n",num[i]);
             break;
         }
     }
     if(i==n) {
-        printf("None");
+        printf("None\n");
     }
-    
     return 0;
 }
