@@ -2,40 +2,47 @@
 //  1063.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/3/7.
+//  Created by 王怡凡 on 2017/4/1.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
 #include<cstdio>
 #include<set>
-#include<vector>
 using namespace std;
-const int maxn = 51;
-set<int> st[maxn];
 
-void compare(int x, int y) {
-    int totalNum = st[y].size(), sameNum=0;
-    for(set<int>::iterator it=st[x].begin();it!=st[x].end();it++) {
-        if(st[y].find(*it)!=st[y].end()) sameNum++;
-        else totalNum++;
+const int maxn = 60;
+set<int> st[maxn];
+int n,m;
+
+
+void compare(int query1, int query2) {
+    int same=0,all=st[query1].size();
+    for(set<int>::iterator it=st[query2].begin();it!=st[query2].end();it++) {
+        if(st[query1].find(*it)!=st[query1].end()) {
+            same++;
+        } else {
+            all++;
+        }
     }
-    printf("%.1f%%\n",sameNum*100.0/totalNum);
+//    printf("same:%d\n",same);
+//    printf("all:%d\n",all);
+    printf("%.1f%%\n",same*100.0/all);
 }
 
 int main() {
-    int n,m,k,q,v,s1,s2,i;
     scanf("%d",&n);
+    int i,j,data,k,query1,query2;
     for(i=1;i<=n;i++) {
-        scanf("%d",&k);
-        for(int j=0;j<k;j++) {
-            scanf("%d",&v);
-            st[i].insert(v);
+        scanf("%d",&m);
+        for(j=0;j<m;j++) {
+            scanf("%d",&data);
+            st[i].insert(data);
         }
     }
-    scanf("%d",&q);
-    for(i=0;i<q;i++) {
-        scanf("%d%d",&s1,&s2);
-        compare(s1,s2);
+    scanf("%d",&k);
+    for(i=0;i<k;i++) {
+        scanf("%d%d",&query1,&query2);
+        compare(query1,query2);
     }
     return 0;
 }
