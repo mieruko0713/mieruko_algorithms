@@ -1,0 +1,51 @@
+//
+//  1015.cpp
+//  算法
+//
+//  Created by 王怡凡 on 2017/5/26.
+//  Copyright © 2017年 王怡凡. All rights reserved.
+//
+
+#include<cstdio>
+#include<cmath>
+
+bool isPrime(int n) {
+    if(n<=1) {
+        return false;
+    }
+    int sqr = (int)sqrt(n*1.0);
+    for(int i=2;i<=sqr;i++) {
+        if(n%i==0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int d[20];
+
+int main() {
+    int n, radix;
+    while(scanf("%d",&n)!=EOF) {
+        if(n<0) break;
+        scanf("%d",&radix);
+        if(isPrime(n)==false) {
+            printf("No\n");
+        } else {
+            int len = 0;
+            do {
+                d[len++] = n % radix;
+                n /= radix;
+            } while(n!=0);
+            for(int i=0;i<len;i++) {
+                n = n*radix + d[i];
+            }
+            if(isPrime(n)==true) {
+                printf("Yes\n");
+            } else {
+                printf("No\n");
+            }
+        }
+    }
+    return 0;
+}
