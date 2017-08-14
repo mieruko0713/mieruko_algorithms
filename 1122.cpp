@@ -2,74 +2,74 @@
 //  1122.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/23.
+//  Created by 王怡凡 on 2017/8/14.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<vector>
-#include<algorithm>
+#include<set>
 using namespace std;
-
 const int maxn = 210;
-int G[maxn][maxn],n,m;
-vector<int> temp;
+int G[maxn][maxn];
+int n,m;
 
-bool connected(vector<int> v) {
-    int i;
-    for(i=0;i<=v.size()-2;i++) {
-        if(G[v[i]][v[i+1]]!=1) {
+bool isConnected(int n, vector<int> query){
+    int u,x,y;
+    for(u=0;u<n-1;u++) {
+        x = query[u];
+        y = query[u+1];
+        if(!G[x][y]) {
+//            printf("not connected\n");
             return false;
         }
     }
     return true;
 }
 
-bool repeat(vector<int> v ) {
-    int i;
-    sort(v.begin(),v.end());
-    for(i=0;i<=v.size()-2;i++) {
-        if(v[i]==v[i+1]) {
-            return false;
-        }
+bool isCycle(int n, vector<int> query) {
+    if(query[n-1] == query[0]) {
+        return true;
     }
-    return true;
+//    printf("not cycle\n");
+    return false;
 }
 
-int main(){
-    int i,j,a,b,query,k,c;
-    scanf("%d",&n);
-    scanf("%d",&m);
+bool isAll(vector<int> query) {
+    set<int> simple(query.begin(),query.end());
+    if(simple.size()==n&&n==(query.size()-1)) {
+        return true;
+    }
+//    printf("set:%d n: %d query: %d\n", simple.size(), n, query.size()-1);
+    return false;
+}
+
+
+int main() {
+    scanf("%d%d",&n,&m);
+    int i,j,v1,v2,k,v,num;
     for(i=0;i<m;i++) {
-        scanf("%d%d",&a,&b);
-        G[a][b]=1;
-        G[b][a]=1;
+        scanf("%d%d",&v1,&v2);
+        G[v1][v2] = G[v2][v1] = 1;
     }
-    scanf("%d",&query);
-    for(i=0;i<query;i++) {
-        scanf("%d",&k);
-        for(j=0;j<k;j++) {
-            scanf("%d",&c);
-            temp.push_back(c);
+    scanf("%d",&k);
+    for(i=0;i<k;i++) {
+        scanf("%d",&num);
+        vector<int> query;
+        for(j=0;j<num;j++) {
+            scanf("%d",&v);
+            query.push_back(v);
         }
-        if(temp.size()!=n+1) {
+        if(!isCycle(num,query)) {
             printf("NO\n");
-            temp.clear();
             continue;
         }
-        if(temp[temp.size()-1]!=temp[0]) {
+        if(!isConnected(num,query)) {
             printf("NO\n");
-            temp.clear();
             continue;
         }
-        if(repeat(temp)) {
+        if(!isAll(query)) {
             printf("NO\n");
-            temp.clear();
-            continue;
-        }
-        if(!connected(temp)) {
-            printf("NO\n");
-            temp.clear();
             continue;
         }
         printf("YES\n");
