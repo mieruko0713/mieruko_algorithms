@@ -2,50 +2,44 @@
 //  1007.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/5/20.
+//  Created by 王怡凡 on 2017/8/19.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-using namespace std;
+#include <stdio.h>
 
+int k;
 const int maxn = 10010;
-int num[maxn],start[maxn],max,d[maxn];
 
 int main() {
-    int k,i;
-    bool flag = false;
     scanf("%d",&k);
+    bool flag = true;
+    int i,num[maxn],st,left=0,right=0,dp[maxn],maxnum;
     for(i=0;i<k;i++) {
         scanf("%d",&num[i]);
         if(num[i]>=0) {
-            flag = true;
+            flag = false;
         }
+        dp[i] = num[i];
     }
-    if(!flag) {
-        printf("0 %d %d\n",num[0],num[k-1]);
+    st = 0;
+    maxnum = dp[0];
+    if(flag) {
+        printf("0 %d %d",num[0],num[k-1]);
         return 0;
     }
-    d[0] = num[0];
-    max = d[0];
     for(i=1;i<k;i++) {
-        if(d[i-1]+num[i]>num[i]) {
-            d[i] = d[i-1] + num[i];
-            start[i] = start[i-1];
-        } else {
-            d[i] = num[i];
-            start[i] = i;
+        if(dp[i-1]<0) {
+            st = i;
+            continue;
         }
-        if(d[i]>max) {
-            max = d[i];
-        }
-    }
-    printf("%d", max);
-    for(i=0;i<k;i++) {
-        if(d[i]==max) {
-            printf(" %d %d\n",start[i],i);
-            break;
+        dp[i] = num[i] + dp[i-1];
+        if(dp[i]>maxnum) {
+            maxnum = dp[i];
+            left = st;
+            right = i;
         }
     }
+    printf("%d %d %d",maxnum,num[left],num[right]);
     return 0;
 }
