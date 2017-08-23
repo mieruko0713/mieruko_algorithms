@@ -2,37 +2,39 @@
 //  1064.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/4/1.
+//  Created by 王怡凡 on 2017/8/22.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<algorithm>
 using namespace std;
-const int maxn=1010;
-int n,number[maxn],CBT[maxn];
-int idx=0;
+const int maxn = 1010;
+int n,CBT[maxn],in[maxn];
+int idex=1;
 
-void inOrder(int root) {
+void inorder(int root) {
     if(root>n) {
-        return;
+        return ;
     }
-    inOrder(root*2);
-    CBT[root] = number[idx++];
-    inOrder(root*2+1);
+    inorder(2*root);
+    CBT[root] = in[idex++];
+    inorder(2*root+1);
 }
 
 int main() {
     scanf("%d",&n);
     int i;
-    for(i=0;i<n;i++) {
-        scanf("%d",&number[i]);
+    for(i=1;i<=n;i++) {
+        scanf("%d",&in[i]);
     }
-    sort(number,number+n);
-    inOrder(1);
-    for(i=1;i<=n-1;i++){
-        printf("%d ",CBT[i]);
+    sort(in+1,in+n+1);
+    inorder(1);
+    for(i=1;i<=n;i++) {
+        printf("%d",CBT[i]);
+        if(i!=n) {
+            printf(" ");
+        }
     }
-    printf("%d",CBT[n]);
     return 0;
 }
