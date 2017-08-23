@@ -2,52 +2,57 @@
 //  1070.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/3/9.
+//  Created by 王怡凡 on 2017/8/23.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<algorithm>
 using namespace std;
-const int maxn = 1100;
+const int maxn = 1010;
+int n;
+double all;
 
-struct cake {
-    int ton;
-    double price;
-}cakes[maxn];
+struct inv{
+    double d,price,price2;
+}invs[maxn];
 
-bool cmp(cake a, cake b) {
-    return a.price/a.ton > b.price/b.ton;
+bool cmp(inv a, inv b) {
+    return a.price2 > b.price2;
 }
 
-int main() {
-    int i,n,sum;
-    double profit=0.0;
-    scanf("%d%d",&n,&sum);
+int main(){
+    scanf("%d%lf",&n,&all);
+    int i;
     for(i=0;i<n;i++) {
-        scanf("%d",&cakes[i].ton);
+        scanf("%lf",&invs[i].d);
     }
     for(i=0;i<n;i++) {
-        scanf("%lf",&cakes[i].price);
+        scanf("%lf",&invs[i].price);
+        invs[i].price2 = invs[i].price/invs[i].d;
     }
-    sort(cakes,cakes+n,cmp);
-//    for(i=0;i<n;i++) {
-//        printf("%lf",cakes[i].price);
-//    }
+    sort(invs,invs+n,cmp);
+    double sum = 0,pro=0;
     for(i=0;i<n;i++) {
-        if(sum >=  cakes[i].ton) {
-//            printf("sum: %d\n",sum);
-            sum = sum-cakes[i].ton;
-//            printf("ton: %d\n",cakes[i].ton);
-//            printf("sum: %d\n",sum);
-            profit += cakes[i].price;
-//            printf("price: %lf\n",profit);
-        } else if(sum < cakes[i].ton ) {
-            profit += cakes[i].price * (sum*1.0/cakes[i].ton);
-//            printf("price: %lf\n",profit);
+//        if(sum+invs[i].d>all) {
+//            pro += (all-sum)*invs[i].price2;
+//            sum = all;
+//        } else if(sum+invs[i].d<=all) {
+//            pro += invs[i].price;
+//            sum += invs[i].d;
+//        }
+//        if(sum==all) {
+//            printf("%.2lf\n",pro);
+//            break;
+//        }
+        if(invs[i].d<=all) {
+            all -= invs[i].d;
+            pro += invs[i].price;
+        } else {
+            pro += invs[i].price2*all;
             break;
         }
     }
-    printf("%.2lf\n",profit);
+    printf("%.2lf\n",pro);
     return 0;
 }
