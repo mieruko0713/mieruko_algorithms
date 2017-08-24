@@ -12,7 +12,7 @@ using namespace std;
 int n,k,m;
 const int maxn = 10010;
 bool hashes[maxn]={false};
-int all[5];
+int all[6];
 
 struct Stu {
     int id,score[6],rank,sum,perf;
