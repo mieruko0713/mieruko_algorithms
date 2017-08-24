@@ -2,49 +2,51 @@
 //  1079.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/26.
+//  Created by 王怡凡 on 2017/8/24.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<vector>
 #include<cmath>
 using namespace std;
 const int maxn = 100010;
-struct node {
-    int data;
-    vector<int> child;
-}Node[maxn];
+double ans = 0;
 int n;
-double p, r, ans=0;
+double price,per;
 
-void DFS(int index, int depth) {
-    if(Node[index].child.size()==0) {
-        ans += Node[index].data * pow(1+r,depth)*p;
+struct Node {
+    double data;
+    vector<int> child;
+}node[maxn];
+
+void dfs(int index, int dep) {
+    if(node[index].child.size()==0) {
+        ans += node[index].data * price*pow(1+per,dep);
         return ;
     }
-    int i;
-    for(i=0;i<Node[index].child.size();i++) {
-        DFS(Node[index].child[i],depth+1);
+    for(int i=0;i<node[index].child.size();i++) {
+        dfs(node[index].child[i],dep+1);
     }
 }
 
 int main() {
-    scanf("%d%lf%lf",&n,&p,&r);
-    r = r / 100;
-    int i,k,j,id;
+    int child;
+    scanf("%d %lf %lf",&n,&price,&per);
+    per = per /100;
+    int i;
     for(i=0;i<n;i++) {
+        int k;
         scanf("%d",&k);
         if(k==0) {
-            scanf("%d",&Node[i].data);
+            scanf("%lf",&node[i].data);
             continue;
         }
-        for(j=0;j<k;j++) {
-            scanf("%d",&id);
-            Node[i].child.push_back(id);
+        for(int j=0;j<k;j++) {
+            scanf("%d",&child);
+            node[i].child.push_back(child);
         }
     }
-    DFS(0,0);
-    printf("%.1lf",ans);
-    return 0;
+    dfs(0,0);
+    printf("%.1f",ans);
 }
