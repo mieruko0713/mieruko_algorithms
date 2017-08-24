@@ -2,25 +2,27 @@
 //  1076.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/25.
+//  Created by 王怡凡 on 2017/8/24.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<cstring>
+#include <stdio.h>
 #include<vector>
 #include<queue>
-#include<algorithm>
+#include<cstring>
 using namespace std;
 const int maxn = 1010;
-struct Node {
-    int id;
-    int layer;
-};
-vector<Node> adj[maxn];
 bool inq[maxn] = {false};
+int n,l;
+struct Node {
+    int id,layer;
+};
 
-int BFS(int s, int L) {
+vector<Node> adj[maxn];
+
+
+
+void bfs(int s, int l) {
     int numForward = 0;
     queue<Node> q;
     Node start;
@@ -29,42 +31,40 @@ int BFS(int s, int L) {
     q.push(start);
     inq[start.id] = true;
     while(!q.empty()) {
-        Node top = q.front();
+        Node now = q.front();
         q.pop();
-        int u = top.id,i;
-        for(i=0;i<adj[u].size();i++) {
+        int u = now.id;
+        for(int i=0;i<adj[u].size();i++) {
             Node next = adj[u][i];
-            next.layer = top.layer+1;
-            if(inq[next.id]==false&&next.layer<=L) {
+            next.layer = now.layer+1;
+            if(inq[next.id]==false&&next.layer<=l) {
                 q.push(next);
                 inq[next.id] = true;
                 numForward++;
             }
         }
     }
-    return numForward;
+    printf("%d\n",numForward);
 }
 
 int main() {
+    scanf("%d %d",&n,&l);
+    int i,k,v;
     Node user;
-    int n, L, numFollow, idFollow;
-    scanf("%d%d",&n,&L);
-    int i,j;
     for(i=1;i<=n;i++) {
-        user.id=i;
-        scanf("%d",&numFollow);
-        for(j=0;j<numFollow;j++) {
-            scanf("%d",&idFollow);
-            adj[idFollow].push_back(user);
+        user.id = i;
+        scanf("%d",&k);
+        for(int j=0;j<k;j++) {
+            scanf("%d",&v);
+            adj[v].push_back(user);
         }
     }
-    int numQuery,s;
-    scanf("%d",&numQuery);
-    for(i=0;i<numQuery;i++) {
+    int query,q;
+    scanf("%d",&query);
+    for(i=0;i<query;i++){
         memset(inq,false,sizeof(inq));
-        scanf("%d",&s);
-        int numForward = BFS(s,L);
-        printf("%d\n",numForward);
+        scanf("%d",&q);
+        bfs(q,l);
     }
     return 0;
 }
