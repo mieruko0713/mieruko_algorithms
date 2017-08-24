@@ -2,53 +2,55 @@
 //  1077.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/26.
+//  Created by 王怡凡 on 2017/8/24.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<cstring>
+#include <stdio.h>
+#include<string>
+#include<iostream>
 using namespace std;
-int n, minLen=256,ans=0;
-char s[100][256];
+int n;
 
 int main() {
     scanf("%d",&n);
     getchar();
-    int i,j,len;
-    for(i=0;i<n;i++) {
-        gets(s[i]);
-        len = strlen(s[i]);
-        if(len<minLen) {
-            minLen = len;
+    int i;
+    string s1;
+    getline(cin,s1);
+//    printf("%c\n",s1[9]);
+    string s2;
+    for(i=1;i<n;i++) {
+        getline(cin,s2);
+        int len1 = int(s1.length()),len2 = int(s2.length());
+        if(len2<len1) {
+            string s3 = s1;
+            int len3 = len1;
+            s1 = s2;
+            s2 =s3;
+            len1 = len2;
+            len2 =len3;
         }
-        for(j=0;j<len/2;j++) {
-            char temp = s[i][j];
-            s[i][j] = s[i][len-j-1];
-            s[i][len-j-1] = temp;
+//        cout<<len1<<endl;
+//        cout<<len2 <<endl;
+        if(len1==0) {
+            break;
         }
-    }
-    bool same = true;
-    for(i=0;i<minLen;i++) {
-        char c = s[0][i];
-        for(j=1;j<n;j++) {
-            if(s[j][i]!=c) {
-                same = false;
+        for(int j=0;j<len1;j++) {
+            if(s1[len1-1-j]!=s2[len2-1-j]) {
+//                printf("j:%d %c %c\n",j,s1[len1-1-j],s2[len2-1-j]);
+//                cout << s1 <<endl;
+//                cout << s2 <<endl;
+//                continue;
+                s1 = s1.substr(len1-j,len1);
                 break;
             }
         }
-        if(same) {
-            ans++;
-        }else {
-            break;
-        }
     }
-    if(ans) {
-        for(i=ans-1;i>=0;i--) {
-            printf("%c",s[0][i]);
-        }
+    if(s1.length()==0) {
+        cout << "nai" <<endl;
     } else {
-        printf("nai");
+        cout << s1 << endl;
     }
     return 0;
 }
