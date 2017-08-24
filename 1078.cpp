@@ -2,22 +2,22 @@
 //  1078.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/26.
+//  Created by 王怡凡 on 2017/8/24.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<cmath>
-#include<vector>
 using namespace std;
-const int N = 10010;
-bool Hash[N] = {false};
+const int maxn = 10010;
+int Msize,n;
+bool hashes[maxn] = {false};
+
 
 bool isPrime(int x) {
-    if(x==1) {
-        return false;
-    }
-    int i,sqr = int(sqrt(x*1.0));
+    if(x<=1) return false;
+    int sqr = int(sqrt(x*1.0));
+    int i;
     for(i=2;i<=sqr;i++) {
         if(x%i==0) {
             return false;
@@ -26,43 +26,35 @@ bool isPrime(int x) {
     return true;
 }
 
-int main() {
-    int n, i,size, a;
-    scanf("%d%d",&size,&n);
-    while(!isPrime(size)) {
-        size++;
+int main(){
+    scanf("%d %d",&Msize,&n);
+    int i,num;
+    while(!isPrime(Msize)) {
+        Msize++;
     }
     for(i=0;i<n;i++) {
-        scanf("%d",&a);
-        int M = a%size;
-        if(Hash[M]==false) {
-            Hash[M] = true;
-            if(i==0) {
-                printf("%d",M);
-            } else {
-                printf(" %d",M);
-            }
+        scanf("%d",&num);
+        int M = num%Msize;
+        if(hashes[M]==false) {
+            printf("%d",M);
+            hashes[M] = true;
         } else {
-            int step;
-            for(step=1;step<size;step++) {
-                M=(a+step*step)%size;
-                if(Hash[M]==false){
-                    Hash[M] = true;
-                    if(i==0) {
-                        printf("%d",M);
-                    } else {
-                        printf(" %d",M);
-                    }
+            bool flag = false;
+            for(int j=1;j<Msize;j++) {
+                M = (num+j*j)%Msize;
+                if(hashes[M]==false) {
+                    printf("%d",M%Msize);
+                    hashes[M] = true;
+                    flag = true;
                     break;
                 }
             }
-            if(step==size) {
-                if(i>0) {
-                    printf(" -");
-                } else {
-                    printf("-");
-                }
+            if(!flag) {
+                printf("-");
             }
+        }
+        if(i!=n-1) {
+            printf(" ");
         }
     }
     return 0;
