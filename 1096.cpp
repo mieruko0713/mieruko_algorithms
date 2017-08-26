@@ -2,23 +2,24 @@
 //  1096.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/22.
+//  Created by 王怡凡 on 2017/8/26.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<cmath>
-#include<algorithm>
-typedef long long LL;
 using namespace std;
+typedef long long ll;
+ll n;
 
 int main() {
-    LL n;
     scanf("%lld",&n);
-    LL sqr = (LL)sqrt(1.0*n), ansI=0, ansLen=0;
-    for(LL i=2;i<=sqr;i++) {
-        LL temp = 1, j=i;
-        while(1) {
+    ll sqr = (ll)sqrt(1.0*n);
+    ll ansLen = 0,ansI=0;
+    for(ll i=2;i<=sqr;i++){
+        ll temp=1;
+        ll j=i;
+        while(1){
             temp *= j;
             if(n%temp!=0) break;
             if(j-i+1>ansLen) {
@@ -28,11 +29,11 @@ int main() {
             j++;
         }
     }
-    if(ansLen==0) {
+    if(ansLen == 0) {
         printf("1\n%lld",n);
     } else {
         printf("%lld\n",ansLen);
-        for(LL i=0;i<ansLen;i++) {
+        for(ll i=0;i<ansLen;i++) {
             printf("%lld",ansI+i);
             if(i<ansLen-1) {
                 printf("*");
