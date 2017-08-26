@@ -2,60 +2,73 @@
 //  1097.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/23.
+//  Created by 王怡凡 on 2017/8/26.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<cstring>
-#include<cstdlib>
-#include<cmath>
+#include <stdio.h>
 #include<algorithm>
+#include<cstdlib>
 using namespace std;
+const int maxn = 100010;
+int st,n;
+int hashes[10010] = {false};
 
-const int maxn = 100005;
-const int table = 1000010;
 struct Node {
-    int address, data, next;
-    int order;
-}node[maxn];
-bool isExist[table] = {false};
+    int address,data,next,order;
+}node[maxn*2];
+
 bool cmp(Node a, Node b) {
-    return a.order<b.order;
+    return a.order < b.order;
 }
-int main() {
-    memset(isExist, false, sizeof(isExist));
-    int i;
+
+
+int main(){
+    scanf("%d%d",&st,&n);
+    int i,address;
     for(i=0;i<maxn;i++) {
-        node[i].order = 2*maxn;
+        node[i].order = maxn;
     }
-    int n, begin, address;
-    scanf("%d %d",&begin,&n);
     for(i=0;i<n;i++) {
         scanf("%d",&address);
-        scanf("%d %d",&node[address].data,&node[address].next);
+        
         node[address].address = address;
+        scanf("%d %d",&node[address].data,&node[address].next);
     }
-    int countValid=0,countRemoved=0,p=begin;
-    while(p!=-1) {
-        int data = node[p].data;
-        if(!isExist[abs(data)]) {
-            isExist[abs(data)] = true;
-            node[p].order = countValid++;
-        } else {
-            node[p].order = maxn + countRemoved++;
-        }
-        p = node[p].next;
+    int now = st,order=0;
+    while(now!=-1) {
+        node[now].order=order++;
+        now = node[now].next;
     }
     sort(node,node+maxn,cmp);
-    int count=countValid + countRemoved;
-    for(i=0;i<count;i++) {
-        if(i!=countValid-1&&i!=count-1) {
-            printf("%05d %d %05d\n",node[i].address, node[i].data, node[i+1].address);
+    printf("%05d %d",node[0].address,node[0].data);
+    int count=0;
+    hashes[abs(node[0].data)] = true;
+    for(i=1;i<n;i++) {
+        int data = abs(node[i].data);
+        if(hashes[data]) {
+            node[maxn+count] = node[i];
+            count++;
+            if(i==n-1) {
+                printf(" -1\n");
+            }
         } else {
-            printf("%05d %d -1\n",node[i].address, node[i].data);
-
+            printf(" %05d\n",node[i].address);
+            hashes[data] = true;
+            if(i!=n-1){
+               printf("%05d %d",node[i].address,node[i].data);
+            } else {
+                printf("%05d %d -1\n",node[i].address,node[i].data);
+            }
         }
+    }
+    for(i=maxn;i<count+maxn;i++) {
+        if(i<maxn+count-1){
+            printf("%05d %d %05d\n",node[i].address,node[i].data,node[i+1].address);
+        } else {
+            printf("%05d %d -1\n",node[i].address,node[i].data);
+        }
+        
     }
     return 0;
 }
