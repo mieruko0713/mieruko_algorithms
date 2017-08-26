@@ -2,28 +2,32 @@
 //  1091.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/3/20.
+//  Created by 王怡凡 on 2017/8/26.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<queue>
+#include <stdio.h>
+#include<queue>;
 using namespace std;
-struct node {
-    int x,y,z;
-}Node;
-int n,m,slice,T;
-int pixel[1290][130][61];
-bool inq[1290][130][61] = {false};
+const int maxx = 1230;
+const int maxy = 130;
+const int maxz = 62;
+bool inq[maxx][maxy][maxz] = {false};
+int matrix[maxx][maxy][maxz];
+int m,n,l,t;
 int X[6] = {0,0,0,0,1,-1};
 int Y[6] = {0,0,1,-1,0,0};
 int Z[6] = {1,-1,0,0,0,0};
 
+struct Node {
+    int x,y,z;
+}node;
+
 bool judge(int x, int y, int z) {
-    if(x>=n||x<0||y>=m||y<0||z>=slice||z<0) {
+    if(x>=n||x<0||y>=m||y<0||z>=l||z<0) {
         return false;
     }
-    if(pixel[x][y][z]==0||inq[x][y][z]==true) {
+    if(matrix[x][y][z]==0 || inq[x][y][z]==true) {
         return false;
     }
     return true;
@@ -31,47 +35,46 @@ bool judge(int x, int y, int z) {
 
 int BFS(int x, int y, int z) {
     int tot = 0;
-    queue<node> Q;
-    Node.x = x, Node.y=y,Node.z=z;
-    Q.push(Node);
-    inq[x][y][z] = true;
-    while(!Q.empty()) {
-        node top = Q.front();
-        Q.pop();
+    queue<Node> q;
+    node.x=x,node.y=y,node.z=z;
+    q.push(node);
+    inq[node.x][node.y][node.z] = true;
+    while(!q.empty()) {
+        Node top = q.front();
+        q.pop();
         tot++;
         for(int i=0;i<6;i++) {
             int newX = top.x + X[i];
             int newY = top.y + Y[i];
             int newZ = top.z + Z[i];
-            if(judge(newX, newY, newZ)) {
-                Node.x = newX,Node.y=newY,Node.z=newZ;
-                Q.push(Node);
+            if(judge(newX,newY,newZ)) {
+                node.x=newX,node.y=newY,node.z=newZ;
+                q.push(node);
                 inq[newX][newY][newZ] = true;
             }
         }
     }
-    if(tot>=T) {
+    if(tot>=t) {
         return tot;
-    }
-    else return 0;
+    } else return 0;
 }
-
+           
 int main() {
-    scanf("%d %d %d %d",&n,&m,&slice,&T);
-    int z,x,y;
-    for(z=0;z<slice;z++) {
-        for(x=0;x<n;x++) {
-            for(y=0;y<m;y++) {
-                scanf("%d",&pixel[x][y][z]);
+    scanf("%d%d%d%d",&m,&n,&l,&t);
+    int i,j,k;
+    for(i=0;i<l;i++) {
+        for(j=0;j<m;j++) {
+            for(k=0;k<n;k++) {
+                scanf("%d",&matrix[k][j][i]);
             }
         }
     }
     int ans = 0;
-    for(z=0;z<slice;z++) {
-        for(x=0;x<n;x++) {
-            for(y=0;y<m;y++) {
-                if(pixel[x][y][z]==1&&inq[x][y][z]==false) {
-                    ans += BFS(x,y,z);
+    for(i=0;i<l;i++) {
+        for(j=0;j<m;j++) {
+            for(k=0;k<n;k++) {
+                if(matrix[k][j][i]==1&&inq[k][j][i]==false) {
+                    ans += BFS(k,j,i);
                 }
             }
         }
