@@ -2,50 +2,92 @@
 //  1089.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/8/25.
+//  Created by 王怡凡 on 2017/8/28.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
 #include <stdio.h>
-#include<vector>
-#include<cmath>
+#include<algorithm>
 using namespace std;
-const int maxn = 100010;
-vector<int> child[maxn];
-int n,maxdep=-1,num=0;
-double p,r;
+const int maxn = 111;
+int origin[maxn],tempOri[maxn],changed[maxn];
+int n;
 
-void dfs(int index, int dep) {
-    if(child[index].size()==0) {
-        if(dep>maxdep) {
-            maxdep = dep;
-            num = 1;
-        } else if(dep==maxdep) {
-            num++;
+bool isSame(int A[],int B[]) {
+    for(int i=0;i<n;i++) {
+        if(A[i]!=B[i]) {
+//            printf("a[i]:%d b[i]:%d\n",A[i],B[i]);
+            return false;
         }
-        return ;
     }
-    for(int i=0;i<child[index].size();i++) {
-        dfs(child[index][i],dep+1);
+    return true;
+}
+
+void showArray(int A[]) {
+    for(int i=0;i<n;i++) {
+        printf("%d",A[i]);
+        if(i!=n-1) {
+            printf(" ");
+        } else {
+            printf("\n");
+        }
     }
 }
 
-int main(){
-    scanf("%d %lf %lf",&n,&p,&r);
-    r = r/100;
-    int i,root;
-    int sup;
-    for(i=0;i<n;i++) {
-        scanf("%d",&sup);
-        if(sup!=-1) {
-           child[sup].push_back(i);
-        } else {
-            root = i;
+bool insertSort() {
+    bool flag = false;
+    for(int i=1;i<n;i++) {
+        if(i!=1&&isSame(tempOri,changed)) {
+            flag = true;
         }
-        
+        int temp = tempOri[i], j=i;
+        while(j>0&&tempOri[j-1]>temp) {
+            tempOri[j] = tempOri[j-1];
+            j--;
+        }
+        tempOri[j] = temp;
+        if(flag == true) {
+            return true;
+        }
     }
-    dfs(root,0);
-    double ans = p*pow(1+r,maxdep);
-    printf("%.2lf %d",ans,num);
+    return false;
+}
+
+void mergeSort() {
+    bool flag = false;
+    for(int step=2;step/2<=n;step*=2) {
+        if(step!=2&&isSame(tempOri,changed)) {
+            flag = true;
+        }
+        for(int i=0;i<n;i+=step) {
+            sort(tempOri+i,tempOri+min(i+step,n));
+        }
+        if(flag==true) {
+            showArray(tempOri);
+            return ;
+        }
+    }
+}
+
+int main() {
+    scanf("%d",&n);
+    int i;
+    for(i=0;i<n;i++) {
+        scanf("%d",&origin[i]);
+        tempOri[i] = origin[i];
+    }
+    for(i=0;i<n;i++) {
+        scanf("%d",&changed[i]);
+    }
+    if(insertSort()) {
+        printf("Insertion Sort\n");
+        showArray(tempOri);
+    } else {
+        printf("Merge Sort\n");
+        for(i=0;i<n;i++) {
+            tempOri[i] = origin[i];
+        }
+        mergeSort();
+    }
     return 0;
 }
