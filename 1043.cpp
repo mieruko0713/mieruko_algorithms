@@ -2,38 +2,34 @@
 //  1043.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/28.
+//  Created by 王怡凡 on 2017/8/28.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<vector>
-
 using namespace std;
-
-vector<int> origin,pre,preM,post,postM;
-
-struct node{
+vector<int> origin, pre,preM,post,postM;
+struct node {
     int data;
-    node *left, *right;
+    node *left,*right;
 };
 
 void insert(node* &root, int data) {
     if(root==NULL) {
         root = new node;
-        root -> data = data;
-        root -> left = NULL;
-        root -> right = NULL;
+        root->data = data;
+        root->left = root->right = NULL;
         return ;
     }
     if(data<root->data) {
         insert(root->left,data);
     } else {
-        insert(root->right, data);
+        insert(root->right,data);
     }
 }
 
-void preOrder(node* root, vector<int>& vi) {
+void preOrder(node* root, vector<int> &vi) {
     if(root==NULL) {
         return ;
     }
@@ -42,16 +38,16 @@ void preOrder(node* root, vector<int>& vi) {
     preOrder(root->right,vi);
 }
 
-void preOrderMirror(node* root, vector<int>& vi) {
+void preOrderMirror(node* root, vector<int> &vi) {
     if(root==NULL) {
         return ;
     }
     vi.push_back(root->data);
-    preOrderMirror(root->right, vi);
-    preOrderMirror(root->left, vi);
+    preOrderMirror(root->right,vi);
+    preOrderMirror(root->left,vi);
 }
 
-void postOrder(node* root, vector<int>& vi) {
+void postOrder(node* root, vector<int> &vi) {
     if(root==NULL) {
         return ;
     }
@@ -60,7 +56,7 @@ void postOrder(node* root, vector<int>& vi) {
     vi.push_back(root->data);
 }
 
-void postOrderMirror(node* root, vector<int>& vi) {
+void postOrderMirror(node* root, vector<int> &vi) {
     if(root==NULL) {
         return ;
     }
@@ -70,9 +66,10 @@ void postOrderMirror(node* root, vector<int>& vi) {
 }
 
 int main() {
-    int i,n,data;
-    node* root = NULL;
+    int n,data;
+    node *root = NULL;
     scanf("%d",&n);
+    int i;
     for(i=0;i<n;i++) {
         scanf("%d",&data);
         origin.push_back(data);
@@ -86,20 +83,20 @@ int main() {
         printf("YES\n");
         for(i=0;i<post.size();i++) {
             printf("%d",post[i]);
-            if(i<post.size()-1) {
+            if(i!=post.size()-1) {
                 printf(" ");
             }
         }
-    } else if(origin == preM) {
+    } else if(origin==preM){
         printf("YES\n");
         for(i=0;i<postM.size();i++) {
             printf("%d",postM[i]);
-            if(i<post.size()-1) {
+            if(i!=postM.size()-1) {
                 printf(" ");
             }
         }
     } else {
-        printf("No\n");
+        printf("NO\n");
     }
     return 0;
 }
