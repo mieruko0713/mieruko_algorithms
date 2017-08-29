@@ -2,75 +2,80 @@
 //  1100.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/24.
+//  Created by 王怡凡 on 2017/8/29.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
+#include <stdio.h>
 #include<map>
 #include<string>
-#include <cctype>
 #include<iostream>
 using namespace std;
-const int maxn = 110;
-using namespace std;
-int n,num[3];
-char strs[maxn][10];
-string numToStr[24] = {"jan", "feb", "mar", "apr", "may", "jun", "jly", "aug", "sep", "oct", "nov", "dec","tam", "hel", "maa", "huh", "tou", "kes", "hei", "elo", "syy", "lok", "mer", "jou"};
-map<string,int> strToNum;
+int n;
+string mars[2][13] = {
+    {"tret","jan","feb", "mar", "apr", "may", "jun", "jly", "aug", "sep", "oct", "nov", "dec"},
+    {"tret","tam", "hel","maa", "huh", "tou", "kes", "hei", "elo", "syy", "lok", "mer", "jou"}
+};
+map<string,int> earth[2];
 
-void func1(string s) {
-    int len = s.length(),i,num=0;
-    for(i=0;i<len;i++) {
-        num = num*10 + (s[i]-'0');
+void func1(string data) {
+    int ans=0,res[2];
+    for(int i=0;i<data.length();i++) {
+        ans = ans*10 + (data[i]-'0');
     }
-    if(num==0) {
-        printf("tret");
+    if(ans==0) {
+        printf("tret\n");
+        return ;
     }
-    if(num/13!=0) {
-        cout << numToStr[num/13+12-1]<<" "<<numToStr[num%13-1] <<endl;
+    int num=0;
+    while(ans!=0) {
+        res[num++] = ans%13;
+        ans /= 13;
+    }
+    if(num==2) {
+        string all;
+        if(res[0]==0) {
+           all = mars[1][res[1]];
+        } else {
+           all = (mars[1][res[1]] + " " +mars[0][res[0]]);
+        }
+        cout << all <<endl;
     } else {
-        cout << numToStr[num%13-1] <<endl;
+        cout << mars[0][res[0]] << endl;
     }
-    
-//    printf("num: %d\n",num);
 }
 
-void func2(string str) {
-    int len = str.length(), num;
-    if(len==4) {
+void func2(string data) {
+    if(data=="tret") {
         printf("0\n");
-    } else if(len==3) {
-        num = strToNum[str];
-        cout << num << endl;
-    } else if(len == 7) {
-        string temp1 = str.substr(0,3);
-        string temp2 = str.substr(4,3);
-        num = (strToNum[temp1]%12)*13 + strToNum[temp2];
-        printf("%d\n",num);
+        return ;
     }
-}
-
-void init() {
-    int i;
-    for(i=0;i<24;i++) {
-        strToNum[numToStr[i]] = i+1;
-//        printf("str:%s to num: %d\n",numToStr[i],strToNum[numToStr[i]]);
+    int ans;
+    if(data.length()==3) {
+        ans = earth[0][data]==0?earth[1][data]*13:earth[0][data];
+    } else {
+        string s1 = data.substr(0,3);
+        string s2 = data.substr(4,3);
+        ans = earth[1][s1]*13 + earth[0][s2];
     }
+    printf("%d\n",ans);
 }
 
 int main() {
-    init();
-    int n,i;
-    scanf("%d",&n);
+    cin >> n;
     getchar();
-    for(i=0;i<n;i++) {
-        string s;
-        getline(cin, s);
-        if(isdigit(s[0])) {
-            func1(s);
+    string data;
+    for(int i=0;i<2;i++) {
+        for(int j=0;j<13;j++) {
+            earth[i][mars[i][j]] = j;
+        }
+    }
+    for(int i=0;i<n;i++) {
+        getline(cin,data);
+        if(data[0]>='0'&&data[0]<='9') {
+            func1(data);
         } else {
-            func2(s);
+            func2(data);
         }
     }
     return 0;
