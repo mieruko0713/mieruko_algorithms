@@ -2,91 +2,83 @@
 //  1021.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/8/20.
+//  Created by 王怡凡 on 2017/8/29.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
 #include <stdio.h>
 #include<vector>
+#include<cstring>
 #include<set>
 using namespace std;
-int n,num=0,maxDepth=-1;
-const int maxn = 10010;
-vector<int> tree[maxn];;
+const int maxn = 100010;
+int n,maxdep;
+vector<int> G[maxn],a,b;
+set<int> ans;
 bool vis[maxn] = {false};
-bool visit[maxn] = {false};
 
-void dfs(int root) {
-    int i;
-    vis[root] = true;
-    for(i=0;i<tree[root].size();i++) {
-        if(vis[tree[root][i]]==false) {
-            dfs(tree[root][i]);
+void dfs(int index) {
+    vis[index] = true;
+    for(int i=0;i<G[index].size();i++) {
+        if(vis[G[index][i]]==false) {
+            dfs(G[index][i]);
         }
-        
     }
 }
 
-
-void DFSTrave(int root) {
-    int i;
-    for(i=1;i<=n;i++) {
-        if(!vis[i]) {
+int DFSTrave() {
+    int num=0;
+    for(int i=1;i<=n;i++) {
+        if(vis[i]==false) {
             dfs(i);
             num++;
         }
     }
+    return num;
 }
 
-void DFSDepth(int root, int depth,vector<int> &a) {
-    if(tree[root].size()==1&&visit[tree[root][0]]) {
-        if(maxDepth<depth) {
-            maxDepth = depth;
-            a.clear();
-            a.push_back(root);
-        } else if(depth == maxDepth) {
-            a.push_back(root);
-        }
-        return;
+void dfs_deep(int index, int dep,vector<int> &vi) {
+    if(dep>maxdep) {
+        maxdep = dep;
+        vi.clear();
+        vi.push_back(index);
+//        printf("%d\n",maxdep);
+    } else if(dep==maxdep) {
+        vi.push_back(index);
     }
-    visit[root] = true;
-    for(int i=0;i<tree[root].size();i++) {
-        if(!visit[tree[root][i]]) {
-            DFSDepth(tree[root][i],depth+1,a);
+    vis[index] = true;
+    for(int i=0;i<G[index].size();i++){
+        if(vis[G[index][i]]==false) {
+            dfs_deep(G[index][i],dep+1,vi);
         }
     }
-    visit[root] = false;
 }
-
 
 int main() {
     scanf("%d",&n);
-    if(n<=0) {
-        return 0;
-    }
-    int i,v,u;
+    int i,u,v;
     for(i=0;i<n-1;i++) {
-        scanf("%d%d",&v,&u);
-        tree[v].push_back(u);
-        tree[u].push_back(v);
+        scanf("%d %d",&u,&v);
+        G[u].push_back(v);
+        G[v].push_back(u);
     }
-    DFSTrave(1);
+    int num = DFSTrave();
     if(num>1) {
-        printf("Error: %d components",num);
-        return 0;
+        printf("Error: %d components\n",num);
+    } else {
+        memset(vis,false,sizeof(vis));
+        maxdep = 0;
+        dfs_deep(1,0,a);
+        memset(vis,false,sizeof(vis));
+        dfs_deep(a[0],0,b);
+        for(i=0;i<a.size();i++) {
+            ans.insert(a[i]);
+        }
+        for(i=0;i<b.size();i++) {
+            ans.insert(b[i]);
+        }
+        for(auto it=ans.begin();it!=ans.end();it++) {
+            printf("%d\n",*it);
+        }
     }
-    vector<int> a,b;
-    DFSDepth(1,1,a);
-    DFSDepth(a[0],1,b);
-    set<int> res;
-    for(i=0;i<a.size();i++) {
-        res.insert(a[i]);
-    }
-    for(i=0;i<b.size();i++) {
-        res.insert(b[i]);
-    }
-    for(auto j=res.begin();j!=res.end();j++) {
-        printf("%d\n",*j);
-    }
-    return 0;
 }
