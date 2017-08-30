@@ -2,29 +2,23 @@
 //  1116.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/23.
+//  Created by 王怡凡 on 2017/8/30.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<string>
-#include<map>
-#include<math.h>
-#include<iostream>
+#include <stdio.h>
+#include<cmath>
 using namespace std;
-const int maxn = 10010;
-bool in[maxn]={false},visit[maxn]={false};
-int n,m;
-map<int, string> ans;
-string ranks[3] = {"Mystery Award", "Minion", "Chocolate"};
-
+const int maxn = 100010;
+int hashes[maxn],n,hashes2[maxn];
+int ranks[maxn];
 
 bool isPrime(int x) {
-    if(x<=1) {
+    if(x==1) {
         return false;
     }
-    int i,sqr = (int)sqrt(1.0*n);
-    for(i=2;i<=sqr;i++) {
+    int sqr = sqrt(x*1.0);
+    for(int i=2;i<=sqr;i++) {
         if(x%i==0) {
             return false;
         }
@@ -32,35 +26,36 @@ bool isPrime(int x) {
     return true;
 }
 
+
 int main() {
-    int i,num,query,q_num;
-    scanf("%d", &n);
+    scanf("%d",&n);
+    int i,id;
     for(i=0;i<n;i++) {
-        scanf("%d",&num);
-        if(i==0) {
-            ans[num] = ranks[0];
-        } else if(isPrime(i+1)) {
-            ans[num] = ranks[1];
-        } else {
-            ans[num] = ranks[2];
-        }
-        in[num] = true;
+        scanf("%d",&id);
+        ranks[id] = i+1;
+        hashes[id] = 1;
     }
-    scanf("%d",&query);
-    for(i=0;i<query;i++) {
-        scanf("%d",&q_num);
-        printf("%04d: ", q_num);
-        if(in[q_num]) {
-            if(visit[q_num]) {
+    int k;
+    scanf("%d",&k);
+    for(i=0;i<k;i++) {
+        scanf("%d",&id);
+        printf("%04d: ",id);
+        if(hashes[id]) {
+            if(hashes2[id]) {
                 printf("Checked\n");
-                continue;
+            }else {
+                hashes2[id] = 1;
+                if(ranks[id]==1) {
+                    printf("Mystery Award\n");
+                } else if(isPrime(ranks[id])) {
+                    printf("Minion\n");
+                } else {
+                    printf("Chocolate\n");
+                }
+
             }
-            cout << ans[q_num] << endl;
-        } else{
+        } else {
             printf("Are you kidding?\n");
         }
-        visit[q_num] = true;
     }
-    return 0;
 }
-
