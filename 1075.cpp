@@ -8,15 +8,20 @@
 
 #include <stdio.h>
 #include<algorithm>
+#include<vector>
 using namespace std;
 int n,k,m;
 const int maxn = 10010;
 bool hashes[maxn]={false};
 int all[6];
 
+
 struct Stu {
     int id,score[6],rank,sum,perf;
+    bool flag;
 }stu[maxn];
+
+vector<Stu> ans;
 
 bool cmp(Stu a, Stu b) {
     if(a.sum!=b.sum) {
@@ -42,55 +47,51 @@ int main() {
         stu[sid].id = sid;
         if(stu[sid].score[pid]<sc) {
             stu[sid].score[pid] = sc;
+            if(sc!=-1) {
+                stu[sid].flag = true;
+            }
         }
     }
     for(i=1;i<=n;i++) {
-        for(int j=1;j<=k;j++) {
-            if(stu[i].score[j]!=-1&&stu[i].score[j]!=-2) {
-                if(!hashes[i]) {
-                    hashes[i] = true;
+        if(stu[i].flag) {
+            for(int j=1;j<=k;j++) {
+                        if(stu[i].score[j]==all[j]) {
+                            stu[i].perf++;
+                        }
+                if(stu[i].score[j]!=-1&&stu[i].score[j]!=-2) {
+                   stu[i].sum += stu[i].score[j];
+                } else if(stu[i].score[j]==-1){
+                    stu[i].score[j] = 0;
                 }
             }
-            if(stu[i].score[j]==-1) {
-                stu[i].score[j] = 0;
-            } else if(stu[i].score[j]==all[j]) {
-                stu[i].perf++;
-            } else if(stu[i].score[j]==-2) {
-                continue;
-            }
-            stu[i].sum += stu[i].score[j];
+            ans.push_back(stu[i]);
+
         }
     }
-    sort(stu+1,stu+n+1,cmp);
-    stu[1].rank = 1;
-    int rank = 1;
-    for(i=2;i<=n;i++) {
-        if(hashes[stu[i].id]) {
-            rank++;
-        }
-        if(stu[i].sum == stu[i-1].sum) {
-            stu[i].rank = stu[i-1].rank;
+    sort(ans.begin(),ans.end(),cmp);
+    ans[0].rank = 0;
+    int rank = 0;
+    for(i=1;i<ans.size();i++) {
+        rank++;
+        if(ans[i].sum == ans[i-1].sum) {
+            ans[i].rank = ans[i-1].rank;
         } else {
-            stu[i].rank = rank;
+            ans[i].rank = rank;
         }
     }
-    for(i=1;i<=n;i++) {
-        if(hashes[stu[i].id]) {
-            printf("%d %05d %d",stu[i].rank,stu[i].id,stu[i].sum);
+    for(i=0;i<=ans.size()-1;i++) {
+            printf("%d %05d %d",ans[i].rank+1,ans[i].id,ans[i].sum);
             for(int j=1;j<=k;j++) {
-                int score = stu[i].score[j];
-                if(score==-1) {
-                    printf(" 0");
-                } else if(stu[i].score[j]==-2) {
+                int score = ans[i].score[j];
+                if(ans[i].score[j]==-2) {
                     printf(" -");
                 } else {
-                    printf(" %d",stu[i].score[j]);
+                    printf(" %d",ans[i].score[j]);
                 }
                 if(j==k) {
                     printf("\n");
                 }
             }
         }
-    }
     return 0;
 }
