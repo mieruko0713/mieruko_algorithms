@@ -7,37 +7,50 @@
 //
 
 #include <stdio.h>
-#include<cstring>
+#include<string>
+#include<iostream>
 #include<map>
 using namespace std;
 int k;
 const int maxn = 1010;
 map<char,int> hashes;
 map<char,int> hashes2;
-char str[maxn];
+map<char,bool> isnot;
 
 int main() {
     scanf("%d",&k);
-    getchar();
-    gets(str);
-    int i,len=int(strlen(str));
+    string str;
+    cin >> str;
+    int i,len=int(str.length());
+//    printf("len:%d\n",len);
     for(i=0;i<=len-k;i++) {
         int j=1;
         bool flag = true;
         while(j<k) {
             if(str[i]!=str[i+j]) {
                 flag = false;
-//                printf("%c %c\n",str[i],str[i+j]);
+                isnot[str[i]] = true;
+                //                printf("%c %c\n",str[i],str[i+j]);
             }
             j++;
         }
-        hashes[str[i]] += flag;
-        if(flag) {
+        if(!flag) {
+            continue;
+        } else {
+            hashes[str[i]] += flag;
             i+=k-1;
         }
     }
+    char pre = str[len-k];
+    int j=1;
+    while(j<k) {
+        if(str[len-k+j]!=pre) {
+            isnot[str[len-k+j]] = true;
+        }
+        j++;
+    }
     for(i=0;i<=len-k;i++) {
-        if(hashes[str[i]]>1&&hashes2[str[i]]==0) {
+        if(hashes[str[i]]>1&&hashes2[str[i]]==0&&isnot[str[i]]==false) {
             hashes2[str[i]] = 1;
             printf("%c",str[i]);
         }
