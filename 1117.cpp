@@ -2,7 +2,7 @@
 //  1117.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/8/30.
+//  Created by 王怡凡 on 2017/9/7.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
@@ -11,8 +11,7 @@
 #include<vector>
 using namespace std;
 const int maxn = 100010;
-int miles[maxn],days[maxn];
-int n;
+int n,days[maxn],miles[maxn];
 vector<int> ans;
 
 int main() {
@@ -31,8 +30,10 @@ int main() {
     for(i=1;i<n;i++) {
         if(miles[i]>miles[i-1]) {
             for(int j=miles[i-1];j<miles[i];j++) {
-                days[j] = n-1-(i-1);
-//                printf("miles: %d times:%d\n",j,days[j]);
+                if(j>=maxn) {
+                    break;
+                }
+                days[j] = n-i;
                 if(days[j]>=j) {
                     ans.push_back(j);
                 }
