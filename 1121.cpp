@@ -2,50 +2,42 @@
 //  1121.cpp
 //  算法
 //
-//  Created by 王怡凡 on 17/2/23.
+//  Created by 王怡凡 on 2017/9/7.
 //  Copyright © 2017年 王怡凡. All rights reserved.
 //
 
-#include<cstdio>
-#include<vector>
+#include <stdio.h>
 #include<algorithm>
 using namespace std;
-const int maxn = 100100;
-int Hash[maxn];
-bool comes[maxn] = {false};
-vector<int> ans,temp;
-
-
+const int maxn = 100010;
+int n,k,G[maxn],hashes[maxn],id[maxn],ans[50010];
 
 int main() {
-    fill(Hash,Hash+maxn,-1);
-    int couples,couple1,couple2,n,people,i;
-    scanf("%d", &couples);
-    for(i=0;i<couples;i++) {
-        scanf("%d %d", &couple1, &couple2);
-        Hash[couple1] = couple2;
-        Hash[couple2] = couple1;
-    }
     scanf("%d",&n);
+    int i,u,v;
     for(i=0;i<n;i++) {
-        scanf("%d", &people);
-        comes[people] = true;
-        temp.push_back(people);
+        scanf("%d %d",&u,&v);
+        G[u] = v;
+        G[v] = u;
     }
-    for(i=0;i<temp.size();i++) {
-        if(Hash[temp[i]]==-1) {
-            ans.push_back(temp[i]);
-        } else if(!comes[Hash[temp[i]]]) {
-            ans.push_back(temp[i]);
-//            printf("id: %d couple: %d comes: %d",temp[i],Hash[temp[i]],comes[Hash[temp[i]]]);
+    scanf("%d",&k);
+    for(i=0;i<k;i++) {
+        scanf("%d",&id[i]);
+        hashes[id[i]]=1;
+    }
+    int num=0;
+    for(i=0;i<k;i++) {
+        if(hashes[G[id[i]]]==0) {
+            ans[num++]=id[i];
         }
     }
-    printf("%d\n", ans.size());
-    sort(ans.begin(), ans.end());
-    for(i=0;i<ans.size();i++) {
+    printf("%d\n",num);
+    sort(ans,ans+num);
+    for(i=0;i<num;i++) {
         printf("%05d",ans[i]);
-        if(i!=ans.size()-1) {
+        if(i!=num-1) {
             printf(" ");
         }
     }
+    return 0;
 }
