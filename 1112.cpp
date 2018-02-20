@@ -2,66 +2,58 @@
 //  1112.cpp
 //  算法
 //
-//  Created by 王怡凡 on 2017/8/30.
-//  Copyright © 2017年 王怡凡. All rights reserved.
+//  Created by 王怡凡 on 2018/2/20.
+//  Copyright © 2018年 王怡凡. All rights reserved.
 //
 
 #include <stdio.h>
 #include<string>
 #include<iostream>
 #include<map>
+#include<vector>
 using namespace std;
+map<char, int> countNum;
+map<char, bool> hashes;
 int k;
-const int maxn = 1010;
-map<char,int> hashes;
-map<char,int> hashes2;
-map<char,bool> isnot;
+vector<char> ans;
+string s;
+const int maxn = -10010;
 
 int main() {
-    scanf("%d",&k);
-    string str;
-    cin >> str;
-    int i,len=int(str.length());
-//    printf("len:%d\n",len);
-    for(i=0;i<=len-k;i++) {
-        int j=1;
-        bool flag = true;
-        while(j<k) {
-            if(str[i]!=str[i+j]) {
-                flag = false;
-                isnot[str[i]] = true;
-                //                printf("%c %c\n",str[i],str[i+j]);
-            }
-            j++;
-        }
-        if(!flag) {
-            continue;
+    cin >> k >> s;
+    int i;
+    int count=1;
+    for(i=1;i<s.size();i++) {
+        if(s[i]==s[i-1]) {
+            count++;
         } else {
-            hashes[str[i]] += flag;
-            i+=k-1;
+            if(count%k!=0) {
+                countNum[s[i-1]] = maxn;
+            } else {
+                countNum[s[i-1]] += count/k;
+            }
+            count = 1;
         }
     }
-    char pre = str[len-k];
-    int j=1;
-    while(j<k) {
-        if(str[len-k+j]!=pre) {
-            isnot[str[len-k+j]] = true;
-        }
-        j++;
+    if(count%k!=0) {
+        countNum[s[i-1]] = maxn;
+    } else {
+        countNum[s[i-1]] += count/k;
     }
-    for(i=0;i<=len-k;i++) {
-        if(hashes[str[i]]>1&&hashes2[str[i]]==0&&isnot[str[i]]==false) {
-            hashes2[str[i]] = 1;
-            printf("%c",str[i]);
+    count = 1;
+    for(i=0;i<s.size();i++) {
+        if(countNum[s[i]]>=1&&(!hashes[s[i]])) {
+            cout << s[i];
+            hashes[s[i]] = true;
         }
     }
-    printf("\n");
-    for(i=0;i<len;i++) {
-        printf("%c",str[i]);
-        if(hashes2[str[i]]) {
+    cout<<endl;
+    for(i=0;i<s.size();i++) {
+        cout << s[i];
+        if(countNum[s[i]]>=1) {
             i += k-1;
         }
     }
-    printf("\n");
+    cout<<endl;
     return 0;
 }
