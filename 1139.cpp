@@ -1,65 +1,104 @@
-//
-//  1139.cpp
-//  算法
-//
-//  Created by 王怡凡 on 2018/2/18.
-//  Copyright © 2018年 王怡凡. All rights reserved.
-//
-
-#include <stdio.h>
+#include<stdio.h>
 #include<string>
-#include<algorithm>
-#include<iostream>
-#include<vector>
+#include<cmath>
 using namespace std;
-int m, n;
-const int maxn = 10010;
-bool arr[maxn][maxn];
-vector<int> v[maxn];
 
+int k, n;
+const int maxk = 31;
+int pre[maxk], in[maxk];
 struct node {
-    int a, b;
+    int lnum, rnum;
+    int v;
+    node *left, *right;
 };
 
-bool cmp(node x, node y) {
-    if(x.a!=y.a) {
-        return x.a < y.a;
+void create(node* &root, int v) {
+    if(root==NULL) {
+        root = new node;
+        root->left = NULL;
+        root->right = NULL;
+        root->v = v;
+        return;
     }
-    return x.b < y.b;
+    if(abs(root->v) > abs(v)) {
+        create(root->left, v);
+    } else {
+        create(root->right, v);
+    }
+}
+
+bool isSearch = true;
+int preNum = -1;
+
+void judgeSearch(node* root) {
+    if(root==NULL || !isSearch) {
+        return;
+    }
+    judgeSearch(root->left);
+    if(abs(root->v) < preNum) {
+        isSearch = false;
+        return;
+    } else {
+        preNum = abs(root->v);
+    }
+    judgeSearch(root->right);
+}
+
+bool isBalance = true;
+
+int getNum(node *root) {
+    if (root == NULL) return 0;
+    root->lnum = getNum(root->left);
+    root->rnum = getNum(root->right);
+    return root->v > 0 ? max(root->lnum, root->rnum) + 1 : max(root->lnum, root->rnum);
+}
+
+bool judgeBalance(node *root) {
+    if (root == NULL) return true;
+    if(root->lnum != root->rnum) return false;
+    return judgeBalance(root->left) && judgeBalance(root->right);
+}
+
+bool redAndBlack(node* root) {
+    if (root == NULL) return true;
+    if (root->v < 0) {
+        if (root->left != NULL && root->left->v < 0) return false;
+        if (root->right != NULL && root->right->v < 0) return false;
+    }
+    return redAndBlack(root->left) && redAndBlack(root->right);
 }
 
 int main() {
-    scanf("%d %d", &n, &m);
-    int i,k;
-    string a,b;
-    for(i=0;i<m;i++) {
-        cin >> a >> b;
-        if(a.length() == b.length()) {
-            v[abs(stoi(a))].push_back(abs(stoi(b)));
-            v[abs(stoi(b))].push_back(abs(stoi(a)));
-        }
-        arr[abs(stoi(a))][abs(stoi(b))] = arr[abs(stoi(b))][abs(stoi(a))] = true;
-    }
     scanf("%d", &k);
-    for(int i=0;i<k;i++) {
-        int c, d;
-        cin >> c >> d;
-        vector<node> ans;
-        for(int j=0;j<v[abs(c)].size();j++) {
-            for(int k=0;k<v[abs(d)].size();k++) {
-                if(v[abs(c)][j]==abs(d)||v[abs(d)][k]==abs(c)) {
-                    continue;
-                }
-                if(arr[v[abs(c)][j]][v[abs(d)][k]] == true) {
-                    ans.push_back(node{v[abs(c)][j], v[abs(d)][k]});
-                }
-            }
+    int i, j;
+    for(i=0;i<k;i++) {
+        isSearch = true;
+        preNum = -1;
+        node *root = NULL;
+        scanf("%d", &n);
+        for(j=0;j<n;j++) {
+            scanf("%d", &pre[j]);
+            create(root, pre[j]);
         }
-        sort(ans.begin(), ans.end(), cmp);
-        printf("%d\n", int(ans.size()));
-        for(int j=0;j<ans.size();j++) {
-            printf("%04d %04d\n", ans[j].a, ans[j].b);
+        if(root->v<0) {
+            printf("No\n");
+            continue;
         }
+        judgeSearch(root);
+        if(!isSearch) {
+            printf("No\n");
+            continue;
+        }
+        getNum(root);
+        if(!judgeBalance(root)) {
+            printf("No\n");
+            continue;
+        }
+        if(!redAndBlack(root)) {
+            printf("No\n");
+            continue;
+        }
+        printf("Yes\n");
     }
     return 0;
 }
